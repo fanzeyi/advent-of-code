@@ -1,6 +1,7 @@
 use argh::FromArgs;
 
 mod support;
+mod utils;
 
 with_max_day!(define);
 
