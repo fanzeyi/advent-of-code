@@ -1,7 +1,10 @@
-use std::io::{self, BufRead, BufReader};
+use std::{
+    fs::File,
+    io::{BufRead, BufReader, Result},
+};
 
-pub fn lines_from_stdin() -> impl Iterator<Item = String> {
-    let stdin = io::stdin();
-    let handle = BufReader::new(stdin.lock());
-    handle.lines().filter_map(|line| line.ok())
+pub fn lines_from_input(day: u32) -> Result<impl Iterator<Item = String>> {
+    let input = File::open(format!("inputs/day{}", day))?;
+    let reader = BufReader::new(input);
+    Ok(reader.lines().filter_map(|line| line.ok()))
 }

@@ -1,7 +1,5 @@
-use crate::utils::lines_from_stdin;
-
-pub fn run() {
-    let mut result: Vec<u64> = lines_from_stdin().fold(vec![0], |mut acc, line| {
+pub fn run(inputs: impl Iterator<Item = String>) {
+    let mut result: Vec<u64> = inputs.fold(vec![0], |mut acc, line| {
         if line.is_empty() {
             acc.push(0);
         } else {

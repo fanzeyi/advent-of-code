@@ -1,5 +1,3 @@
-use crate::utils::lines_from_stdin;
-
 #[derive(Debug, PartialEq, Eq)]
 enum Outcome {
     Win,
@@ -128,9 +126,8 @@ impl RockPaperScissor {
     }
 }
 
-pub fn run() {
-    let inputs = lines_from_stdin().collect::<Vec<_>>();
-
+pub fn run(inputs: impl Iterator<Item = String>) {
+    let inputs = inputs.collect::<Vec<_>>();
     // part 1
     let total: u64 = inputs
         .clone()
