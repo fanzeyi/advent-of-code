@@ -35,6 +35,7 @@ macro_rules! with_max_day {
         with_max_day!($expand,);
     };
     ($expand: path, $($args: expr),*) => {
-        $expand!(1, $($args),*);
+        // Change day here
+        $expand!(2, $($args),*);
     };
 }

@@ -1,7 +1,7 @@
-use std::io::{self, BufRead, BufReader, Result};
+use std::io::{self, BufRead, BufReader};
 
-pub fn lines_from_stdin() -> impl Iterator<Item = Result<String>> {
+pub fn lines_from_stdin() -> impl Iterator<Item = String> {
     let stdin = io::stdin();
     let handle = BufReader::new(stdin.lock());
-    handle.lines()
+    handle.lines().filter_map(|line| line.ok())
 }
