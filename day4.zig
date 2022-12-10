@@ -9,6 +9,10 @@ const Range = struct {
         return self.left >= other.left and self.right <= other.right;
     }
 
+    fn overlaps(self: *const Range, other: Range) bool {
+        return (self.left <= other.right and self.left >= other.left) or (self.right >= other.left and self.right <= other.right);
+    }
+
     fn fromStr(str: []const u8) ?Range {
         const result = splitTwo(u8, str, '-').?;
         const left = std.fmt.parseInt(u32, result[0], 10) catch return null;
@@ -24,12 +28,11 @@ fn splitTwo(comptime T: type, haystack: []const T, delimiter: T) ?[2]([]const T)
     return [_]([]const T){ haystack[0..index], haystack[(index + 1)..] };
 }
 
-fn parseLine(line: []const u8) ?bool {
+fn parseLine(line: []const u8) ?[2]Range {
     const result = splitTwo(u8, line, ',').?;
     const first = Range.fromStr(result[0]).?;
     const second = Range.fromStr(result[1]).?;
-    // std.debug.print("first: {?} second: {?}\n", .{ first, second });
-    return first.within(second) or second.within(first);
+    return [2]Range{ first, second };
 }
 
 pub fn main() anyerror!void {
@@ -37,15 +40,26 @@ pub fn main() anyerror!void {
     var buf = std.io.bufferedReader(std.io.getStdIn().reader());
     var reader = buf.reader();
 
-    var counter: i32 = 0;
+    var part1: u32 = 0;
+    var part2: u32 = 0;
 
     while (try reader.readUntilDelimiterOrEof(&buffer, '\n')) |line| {
-        if (parseLine(line) orelse continue) {
-            counter += 1;
+        const ranges = parseLine(line) orelse continue;
+        const left = ranges[0];
+        const right = ranges[1];
+
+        if (left.within(right) or right.within(left)) {
+            part1 += 1;
+        }
+
+        if (left.overlaps(right) or right.overlaps(left)) {
+            // std.debug.print("= left: {?} right: {?} overlaps\n", .{ left, right });
+            part2 += 1;
         }
     }
 
-    std.debug.print("result: {d}\n", .{counter});
+    std.debug.print("part1: {d}\n", .{part1});
+    std.debug.print("part2: {d}\n", .{part2});
 }
 
 test "parseLine" {
